@@ -3,6 +3,8 @@
 
 代码注释助手是一个图形用户界面程序，可以使用OpenAI的API为输入文件生成中文注释。
 
+此脚本为开源脚本，可以[点这里](https://github.com/RaycarlLei/Add-comments-to-your-code-Chinese/blob/main/src.py)查看源代码。
+
 
 
 ## 使用指南
