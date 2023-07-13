@@ -1,2 +1,25 @@
-# Add-comments-to-your-code-GUI
-This is a Python script with a basic graphical interface for handling long text, based on the OpenAI Davinci-003 model.
+# 代码注释助手
+
+代码注释助手是一个图形用户界面程序，可以使用OpenAI的API为给定的代码生成中文注释。
+## 使用
+
+1. 点击此链接下载中文版本压缩包。
+2. 解压缩该压缩包。
+3. 进入dist文件夹，找到run.exe，双击运行。
+4. 输入你的OpenAI API密钥。
+5. 请确保你的输入文件中没有超过1000个字符的行。
+6. 选择输入和输出文件的路径，以及打开文件时使用的编码方式。
+7. 点击'运行脚本'以开始注释过程。
+8. 请耐心等待。
+9. 运行完成后，输出文件将自动打开。
+## 特性
+
+- 图形用户界面，便于交互。
+- 将大文件分割以分段处理，避免token数超过限制。
+- 将代码发送到OpenAI的API以生成注释。
+- 处理错误和异常。
+- 任务进度条。
+- 测量每个操作所花费的时间。
+
+
+
