@@ -12,7 +12,7 @@
 3. 解压 auto_comment_GUI_github.zip
 4. 进入解压后的文件目录 auto_comment_GUI_github\dist\run 
 5. 找到run.exe，双击运行。
-6. 输入你的OpenAI API密钥。如果你还没有OpenAI API，请参考[获取API](https://github.com/RaycarlLei/Add-comments-to-your-code-Chinese/blob/main/README.md#%E8%8E%B7%E5%8F%96openai-api-key)。
+6. 输入你的OpenAI API密钥。如果你还没有OpenAI API，请参考[获取openai API key](https://github.com/RaycarlLei/Add-comments-to-your-code-Chinese/blob/main/README.md#%E8%8E%B7%E5%8F%96openai-api-key)。
 7. 请确保你的输入代码文件中没有超过1000个字符的行，建议将代码保存入.txt文件中。
 8. 选择输入和输出文件的路径，以及打开文件时使用的编码方式。
 9. 点击'运行脚本'以开始注释过程。
