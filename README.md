@@ -5,7 +5,7 @@
 
 
 
-## 使用
+## 使用指南
 
 1. 点击[此链接](https://github.com/RaycarlLei/Add-comments-to-your-code-Chinese/archive/refs/heads/main.zip)下载项目压缩包。
 2. 解压项目压缩包。打开解压后的文件夹，找到auto_comment_GUI_github.zip
@@ -41,5 +41,5 @@
 
 3. 注意生成后立即复制保存这个API Key，这个Key只显示一次，如果忘记保存就需要重新创建。
 
-4. 按照使用指南运行脚本，在“在下方输入你的OpenAI API Key。”栏输入的API Key。或者将API Key保存到run文件夹里的api_key.txt文件中。
+4. 按照[使用指南](https://github.com/RaycarlLei/Add-comments-to-your-code-Chinese/blob/main/README.md#%E4%BD%BF%E7%94%A8)运行脚本，在“在下方输入你的OpenAI API Key。”栏输入的API Key。或者将API Key保存到run文件夹里的api_key.txt文件中。
 
