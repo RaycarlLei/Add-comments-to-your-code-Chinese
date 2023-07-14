@@ -22,7 +22,7 @@
 1. 点击[此链接](https://github.com/RaycarlLei/Add-comments-to-your-code-Chinese/archive/refs/heads/main.zip)下载项目压缩包。
 2. 解压项目压缩包。打开解压后的文件夹，找到auto_comment_GUI_github_v2.zip
 3. 解压 auto_comment_GUI_github_v2.zip
-4. 进入解压后的文件目录 auto_comment_GUI_github_2\dist\run 
+4. 进入解压后的文件目录 auto_comment_GUI_github_v2\dist\run 
 5. 找到run.exe，双击运行。
 6. 输入你的OpenAI API密钥。如果你还没有OpenAI API，请参考[获取openai API key](https://github.com/RaycarlLei/Add-comments-to-your-code-Chinese/blob/main/README.md#%E8%8E%B7%E5%8F%96openai-api-key)。
 7. 请确保你的输入代码文件中没有超过1000个字符的行，建议将代码保存入.txt文件中。
