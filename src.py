@@ -56,11 +56,11 @@ def read_file(file_path, encoding):
             lines = input_file.readlines()
             for line in lines:
                 if len(line) > 1000:
-                    raise Exception("所读取文件中有超过1000字符长度的行。Line exceeds 1000 characters")
+                    raise Exception("所读取文件中有超过1000字符长度的行。\nLine exceeds 1000 characters")
             code = ''.join(lines)
-        output_text.insert(tk.END, f'文件使用{encoding}编码打开成功。file opened with {encoding} successfully\n')
+        output_text.insert(tk.END, f'文件使用{encoding}编码打开成功。\nfile opened with {encoding} successfully\n')
     except UnicodeDecodeError:
-        output_text.insert(tk.END, f'文件使用{encoding}编码打开失败。file can`t open with {encoding}\n')
+        output_text.insert(tk.END, f'文件使用{encoding}编码打开失败。\nfile can`t open with {encoding}\n')
         code = ''
     except Exception as e:
         output_text.insert(tk.END, f'错误 Error: {str(e)}\n')
@@ -84,7 +84,7 @@ def split_file(code):
             parts.append(part)
 
     count = len(parts)
-    output_text.insert(tk.END, f'file splitted into {count} parts successfully\n')
+    output_text.insert(tk.END, f'已切割为{count}个文本块。\nfile splitted into {count} parts successfully\n')
     return parts, count
 
 def write_api_key(event=None):
@@ -154,7 +154,7 @@ def annotate_code(parts):
     seconds = 0
     annotated_code = ''
     model_engine = 'text-davinci-003'
-    output_text.insert(tk.END, f'模型引擎 {model_engine} 选择成功。model engine {model_engine} selected successfully\n')
+    output_text.insert(tk.END, f'模型引擎 {model_engine} 选择成功。\nmodel engine {model_engine} selected successfully\n')
     start_time = time.time()
     global update
     update = True
@@ -189,7 +189,7 @@ def annotate_code(parts):
         )
 
         output_text.insert(tk.END, f'第 {i+1}/{len(parts)} 部分成功进行了注释。\nPart {i+1}/{len(parts)} annotated successfully\n')
-        output_text.insert(tk.END, f'完成该部分所花费的时间为：{time.time() - part_time:.2f} 秒\nTime taken for this part: {time.time() - part_time:.2f} seconds\n')
+        output_text.insert(tk.END, f'完成该部分所花费的时间为：{time.time() - part_time:.2f} 秒\nTime taken for this part: {time.time() - part_time:.2f} seconds\n\n\n')
 
         progress_bar['value'] = (i+1) / len(parts) * 100
 
@@ -368,4 +368,3 @@ def run_main():
     root.mainloop()
 
 run_main()
-
