@@ -29,7 +29,7 @@ except subprocess.CalledProcessError:
     exit()
 
 def open_link(event, link):
-    webbrowser.open(link)  
+    webbrowser.open(link) 
 
 def update_time():
     global update
@@ -50,20 +50,20 @@ def read_file(file_path, encoding):
     global code, output_text
     try:
         if not os.path.exists(file_path):
-            output_text.insert(tk.END, f'{file_path} is illegal\n')
-            raise Exception("File not exists")
+            output_text.insert(tk.END, f'读取文件地址{file_path}失败，请检测地址是否正确 \n')
+            raise Exception("所读取的文件不存在File not exists")
         with open(file_path, 'r', encoding=encoding) as input_file:
             lines = input_file.readlines()
             for line in lines:
                 if len(line) > 1000:
-                    raise Exception("Line exceeds 1000 characters")
+                    raise Exception("所读取文件中有超过1000字符长度的行。Line exceeds 1000 characters")
             code = ''.join(lines)
-        output_text.insert(tk.END, f'file opened with {encoding} successfully\n')
+        output_text.insert(tk.END, f'文件使用{encoding}编码打开成功。file opened with {encoding} successfully\n')
     except UnicodeDecodeError:
-        output_text.insert(tk.END, f'file can`t open with {encoding}\n')
+        output_text.insert(tk.END, f'文件使用{encoding}编码打开失败。file can`t open with {encoding}\n')
         code = ''
     except Exception as e:
-        output_text.insert(tk.END, f'Error: {str(e)}\n')
+        output_text.insert(tk.END, f'错误 Error: {str(e)}\n')
         code = ''
     return code
 
@@ -102,68 +102,22 @@ def write_file(formatted_now, annotated_code):
     if annotated_code:
         with open(output_path, 'w', encoding='utf-8') as output_file:
             output_file.write(annotated_code)
-        output_text.insert(tk.END, f'file written successfully to {output_path}\n')
+        output_text.insert(tk.END, f'文件写出成功。file written successfully to {output_path}\n')
         return output_path
     else:
-        output_text.insert(tk.END, 'Cannot write empty content to file.\n')
+        output_text.insert(tk.END, '没有输出文件。Cannot write empty content to file.\n')
         return None
+
+
+def save_text():
+    custom_prompt_entry = entry.get()
+    window.destroy()
+
 
 def stop_annotation_code():
     global stop_thread
     stop_thread = True
     update_time()
-
-def annotate_code(parts):
-    
-    global annotated_code, total_time, part_time, minutes, seconds, model_engine, stop_thread, start_time
-    minutes = 0
-    seconds = 0
-    annotated_code = ''
-    model_engine = 'text-davinci-003'
-    output_text.insert(tk.END, f'model engine {model_engine} selected successfully\n')
-    start_time = time.time()
-    global update
-    update = True
-    update_time()
-
-    progress_bar = ttk.Progressbar(root, orient=tk.HORIZONTAL, length=600, mode='determinate')
-    progress_bar.pack()
-
-    for i, part in enumerate(parts):
-        if stop_thread:
-            total_time = time.time() - start_time
-            output_text.insert(tk.END, f'Annotation stopped\nTotal time taken: {total_time:.2f} seconds\n')
-            stop_thread = False
-            break
-    
-        prompt = f'Add chinese code comments for the input. If you believe no comments are necessary, respond with the original input. You can only add comments to the input. You must not delete or modify any part of input. Your response should not include any explanations outside of code. If you believe no comments are necessary, respond with the original input. You can only add comments to the input. You can not delete or modify any part of input. Here is the input:""\n{part}\n""'
-        part_time = time.time()
-        output_text.insert(tk.END, f'Part {i+1}/{len(parts)} started at {time.strftime("%H:%M:%S", time.localtime())}\n')
-
-        completions = openai.Completion.create(
-            engine=model_engine,
-            prompt=prompt,
-            max_tokens=2048,
-            n=1,
-            stop=None,
-            temperature=0.5,
-        )
-
-        output_text.insert(tk.END, f'Part {i+1}/{len(parts)} annotated successfully\n')
-        output_text.insert(tk.END, f'Time taken for this part: {time.time() - part_time:.2f} seconds\n')
-
-        progress_bar['value'] = (i+1) / len(parts) * 100
-
-        annotated_code += completions.choices[0].text
-
-    total_time = time.time() - start_time
-    minutes = total_time // 60
-    seconds = total_time % 60
-    update = False
-    progress_bar.destroy()
-
-
-    return annotated_code, total_time, part_time, minutes, seconds
 
 def browse_file(file_path_entry):
     global filename
@@ -177,10 +131,83 @@ def browse_folder(folder_path_entry):
     folder_path_entry.delete(0, tk.END)
     folder_path_entry.insert(0, foldername)
 
-def run_script():
-    global file_path_entry, encoding_combobox, address_out, minutes, seconds, output_text, debug_mode
+def handle_selection(event):
+    if prompt_combobox.get() == '自定义':
+        global entry, window
+        window = tk.Toplevel(root)
+        window.title('自定义prompt')
+        
+        entry = tk.Entry(window, width=30)
+        entry.pack()
+        
+        save_button = tk.Button(window, text='保存', command=save_text)
+        save_button.pack()
+        
+        close_button = tk.Button(window, text='退出', command=lambda: window.destroy())
+        close_button.pack()
 
+
+def annotate_code(parts):
     
+    global annotated_code, total_time, part_time, minutes, seconds, model_engine, stop_thread, start_time
+    minutes = 0
+    seconds = 0
+    annotated_code = ''
+    model_engine = 'text-davinci-003'
+    output_text.insert(tk.END, f'模型引擎 {model_engine} 选择成功。model engine {model_engine} selected successfully\n')
+    start_time = time.time()
+    global update
+    update = True
+    update_time()
+
+    progress_bar = ttk.Progressbar(root, orient=tk.HORIZONTAL, length=600, mode='determinate')
+    progress_bar.pack()
+
+    for i, part in enumerate(parts):
+        if stop_thread:
+            total_time = time.time() - start_time
+            output_text.insert(tk.END, f'线程被终止\n总共花费时间：{total_time:.2f} 秒\nThread stopped\nTotal time taken: {total_time:.2f} seconds\n')
+            stop_thread = False
+            break
+    
+        if prompt_combobox_value == '添加中文代码注释':
+            prompt = f'Add chinese code comments for the input. If you believe no comments are necessary, respond with the original input. You can only add comments to the input. You must not delete or modify any part of input. Your response should not include any explanations outside of code. If you believe no comments are necessary, respond with the original input. You can only add comments to the input. You can not delete or modify any part of input. Here is the input:""\n{part}\n""'
+        elif prompt_combobox_value == '添加英文代码注释':
+            prompt = f'Add English code comments for the input. If you believe no comments are necessary, respond with the original input. You can only add comments to the input. You must not delete or modify any part of input. Your response should not include any explanations outside of code. If you believe no comments are necessary, respond with the original input. You can only add comments to the input. You can not delete or modify any part of input. Here is the input:""\n{part}\n""'
+        elif prompt_combobox_value == '自定义':
+            prompt = custom_prompt_entry+f'""\n{part}\n""'
+        part_time = time.time()
+        output_text.insert(tk.END, f'Part {i+1}/{len(parts)} started at {time.strftime("%H:%M:%S", time.localtime())}\n')
+
+        completions = openai.Completion.create(
+            engine=model_engine,
+            prompt=prompt,
+            max_tokens=2048,
+            n=1,
+            stop=None,
+            temperature=0.5,
+        )
+
+        output_text.insert(tk.END, f'第 {i+1}/{len(parts)} 部分成功进行了注释。\nPart {i+1}/{len(parts)} annotated successfully\n')
+        output_text.insert(tk.END, f'完成该部分所花费的时间为：{time.time() - part_time:.2f} 秒\nTime taken for this part: {time.time() - part_time:.2f} seconds\n')
+
+        progress_bar['value'] = (i+1) / len(parts) * 100
+
+        annotated_code += completions.choices[0].text
+
+    total_time = time.time() - start_time
+    minutes = total_time // 60
+    seconds = total_time % 60
+    update = False
+    progress_bar.destroy()
+
+    return annotated_code, total_time, part_time, minutes, seconds
+
+
+def run_script():
+    global file_path_entry, encoding_combobox, prompt_combobox_value, address_out, minutes, seconds, output_text, debug_mode, prompt_combobox
+
+    prompt_combobox_value = prompt_combobox.get()
     file_path = file_path_entry.get()
     encoding = encoding_combobox.get()
 
@@ -210,7 +237,7 @@ def run_script():
     output_path = write_file(formatted_now, annotated_code)
 
     destination_path = os.path.join(address_out.get(), os.path.basename(output_path))
-    if os.path.abspath(output_path) != os.path.abspath(destination_path):  
+    if os.path.abspath(output_path) != os.path.abspath(destination_path):  # 检查文件路径是否相同
         shutil.copy(output_path, destination_path)
 
     os.startfile(destination_path)
@@ -221,10 +248,10 @@ def run_script_thread():
     api_key = api_key_entry.get()
     try:
         openai.api_key = api_key
-    
+    # 测试API key可用性
         openai.Engine.list()
     except openai.error.AuthenticationError:
-        output_text.insert(tk.END, "无效的OpenAI API密钥\n")
+        output_text.insert(tk.END, "你输入的OpenAI API密钥错误或者失效了\n")
     
 
     global stop_thread
@@ -243,23 +270,23 @@ def run_main():
     global root
     root = tk.Tk()
     root.title("代码注释助手 Code Commentator")
-    root.geometry("650x1100")
+    root.geometry("650x880")
     root.resizable(width=1, height=1)
 
-    global file_path_entry, api_key_entry, encoding_combobox, output_text, address_out, debug_mode, folder_path
+    global file_path_entry, api_key_entry, encoding_combobox, output_text, address_out, debug_mode, folder_path, prompt_combobox, custom_prompt_entry
     global stop_thread
     stop_thread = False
-  
+    custom_prompt_entry = 'You msut response with the original input. Here is the original input:'
+    
 
-    blank_1 = tk.Label(root, text="\n\n")
+    blank_1 = tk.Label(root, text="\n")
     blank_1.pack()
 
     github_label = tk.Label(root, text="点我查看作者主页", fg="blue", cursor="hand2")
     github_label.bind("<Button-1>", lambda event: open_link(event, "https://github.com/RaycarlLei"))
     github_label.pack()
 
-
-    blank_2 = tk.Label(root, text="\n\n")
+    blank_2 = tk.Label(root, text="\n")
     blank_2.pack()
 
     link_label = tk.Label(root, text="点我获取OpenAI API Key", fg="blue", cursor="hand2")
@@ -279,6 +306,11 @@ def run_main():
     if os.path.exists(api_file_path):
         with open(api_file_path, "r") as file:
             api_key = file.read().strip()
+    else:
+        api_key = ""
+        with open(api_file_path, "w") as file:
+            file.write(api_key)
+
 
     api_key_entry.insert(0, api_key)
     api_key_entry.bind("<KeyRelease>", write_api_key)
@@ -309,8 +341,15 @@ def run_main():
     encoding_combobox.set('utf-8')
     encoding_combobox.pack()
 
+    prompt_combobox = ttk.Combobox(root, values=['添加中文代码注释', '添加英文代码注释','自定义'], width=14)
+    prompt_combobox.set('添加中文代码注释')
+    prompt_combobox.bind('<<ComboboxSelected>>', handle_selection)
+    prompt_combobox.pack()
+
+
+
     debug_mode = tk.IntVar(value=0)
-    debug_checkbox = tk.Checkbutton(root, text="调试模式\n", variable=debug_mode)
+    debug_checkbox = tk.Checkbutton(root, text="**调试**将切片结果保存到文件夹中", variable=debug_mode)
     debug_checkbox.pack()
 
     run_button = tk.Button(root, text="运行脚本", command=run_script_thread)
@@ -323,7 +362,7 @@ def run_main():
     stop_button = tk.Button(root, text="停止运行", command=stop_annotation_code)
     stop_button.pack()
 
-    output_text = tk.Text(root, name="自动注释脚本", height=30, width=80)
+    output_text = tk.Text(root, name="自动注释脚本", height=20, width=80)
     output_text.pack()
 
     root.mainloop()
